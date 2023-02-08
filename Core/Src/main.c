@@ -25,9 +25,80 @@
 #include "Adafruit_ST7735.h"
 #include "graphics.h"
 #include <stdint.h>
+#include <stdio.h>
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+
+/*
+ *  Get a line of input from the serial interface.
+ *  Return the number of characters received.
+ */
+int get_line(char* buf, uint16_t len)
+{
+  /* using a while loop so the user can keep typing, it just won't
+   * enter the buffer past the end */
+  int i = 0;
+  while (1) {
+    char ch = getchar();
+
+    /* handle a newline or carriage return */
+    if (ch == '\n' || ch == '\r') {
+      if (i < len) {
+        buf[i] = '\0';
+        printf("\n\r");
+        break;
+      }
+    }
+
+    /* handle backspaces */
+    if (ch == '\b') {
+      if (i > 0) {
+        i -= 1;
+        buf[i] = '\0';
+        printf("\b \b");
+      }
+      continue;
+    }
+
+    /* handle any other character */
+    if (i == len - 1) {
+      buf[i] = '\0';
+    } else if (i < len) {
+      buf[i] = ch;
+    }
+
+    /* print last pressed character and iterate i */
+    printf("%c", ch);
+    i += 1;
+  }
+
+  return i;
+}
+
+/* Length of the shell buffer */
+#define BUFFER_LEN 255
+
+/*
+ *  Basic shell function.
+ */
+int shell(void) 
+{
+  char buf[BUFFER_LEN]; 
+
+  printf("shell $ ");
+  int chars = get_line(buf, BUFFER_LEN);
+
+  /* if strstr return a pointer to the beginning of buf, 
+   * than echo + a space appears first */
+  if (strstr(buf, "echo ") == (char *)buf) {
+    if (chars > 4) {
+      printf("%s\n\r", (char*)buf + 5);
+    } 
+  }
+
+  return chars;
+}
 
 /**
   * @brief  The application entry point.
@@ -67,19 +138,10 @@ int main(void)
   setvbuf(stdout, NULL, _IONBF, 0);
   HAL_Delay(2500);
 
-  /* do an invalid poke to test the hardfault handler */
-  volatile uint16_t *bad_mem = (uint16_t *)0xDEADBEEF;
-  volatile uint16_t poke = *bad_mem;
-
+  printf("Starting shell\n\r");
   while (1)
   {
-    /* blink all of the user leds */
-    volatile int i;
-    for (i = 0; i < 4000000; ++i);
-    
-    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+    shell();
   }
 }
 
@@ -144,10 +206,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
 
 /**
   * @brief  This function is executed in case of error occurrence.

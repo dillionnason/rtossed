@@ -80,7 +80,8 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/Adafruit_ST7735.c \
 Core/Src/glcdfont.c \
-Core/Src/graphics.c
+Core/Src/graphics.c \
+Core/Src/syscall.c
 
 # ASM sources
 ASM_SOURCES =  \
