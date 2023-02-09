@@ -31,70 +31,6 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
-/*
- *  Get a line of input from the serial interface.
- *  Return the number of characters received.
- */
-int get_line(char *buf, uint16_t len)
-{
-  /* using a while loop so the user can keep typing, it just won't
-   * enter the buffer past the end */
-  int i = 0;
-  int loop = 1;
-  while (loop) {
-    char ch = getchar();
-
-    switch (ch) {
-    case '\n':
-    case '\r':        // handle newlines and carriage returns
-      buf[i] = '\0';
-      printf("\n\r");
-      loop = 0;
-      break;
-
-    case '\b':        // handle backspace
-      if (i > 0) {
-        i -= 1;
-        buf[i] = '\0';
-        printf("\b \b");
-      }
-      break;
-
-    default:          // handle all other characters
-      if (i < len) {
-        buf[i++] = ch;
-      }
-      printf("%c", ch);
-    }
-  }
-
-  return i;
-}
-
-/* Length of the shell buffer */
-#define BUFFER_LEN 255
-
-/*
- *  Basic shell function.
- */
-int shell(void) 
-{
-  char buf[BUFFER_LEN]; 
-
-  printf("shell $ ");
-  int chars = get_line(buf, BUFFER_LEN);
-
-  /* if strstr return a pointer to the beginning of buf, 
-   * than echo + a space appears first */
-  if (strstr(buf, "echo ") == (char *)buf) {
-    if (chars > 4) {
-      printf("%s\n\r", (char*)buf + 5);
-    } 
-  }
-
-  return chars;
-}
-
 /**
   * @brief  The application entry point.
   * @retval int
@@ -133,10 +69,7 @@ int main(void)
   setvbuf(stdout, NULL, _IONBF, 0);
   HAL_Delay(2500);
 
-  printf("Starting shell\n\r");
-  while (1) {
-    shell();
-  }
+  while (1) {}
 }
 
 /**
