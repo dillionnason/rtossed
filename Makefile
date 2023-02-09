@@ -190,26 +190,34 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@echo "[FILE] $<"
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	@$(AS) -c $(CFLAGS) $< -o $@
+	@echo "[FILE] $<"
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-	$(SZ) $@
+	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	@echo "[INFO] Linking completed"
+	@echo "[CMD] $(SZ) $@"
+	@$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(HEX) $< $@
+	@$(HEX) $< $@
+	@echo "[CMD] $(HEX) $< $@"
 	
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+	@$(BIN) $< $@	
+	@echo "[CMD] $(BIN) $< $@"
 	
 $(BUILD_DIR)/%.asm: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(OD) -d $< > $@
+	@$(OD) -d $< > $@
+	@echo "[CMD] $(OD) -d $< > $@"
 
 $(BUILD_DIR):
-	mkdir $@		
+	@mkdir $@		
+	@echo "[INFO] Build directory created"
 
 #######################################
 # clean up

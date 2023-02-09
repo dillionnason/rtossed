@@ -34,43 +34,37 @@ void SystemClock_Config(void);
  *  Get a line of input from the serial interface.
  *  Return the number of characters received.
  */
-int get_line(char* buf, uint16_t len)
+int get_line(char *buf, uint16_t len)
 {
   /* using a while loop so the user can keep typing, it just won't
    * enter the buffer past the end */
   int i = 0;
-  while (1) {
+  int loop = 1;
+  while (loop) {
     char ch = getchar();
 
-    /* handle a newline or carriage return */
-    if (ch == '\n' || ch == '\r') {
-      if (i < len) {
-        buf[i] = '\0';
-        printf("\n\r");
-        break;
-      }
-    }
+    switch (ch) {
+    case '\n':
+    case '\r':        // handle newlines and carriage returns
+      buf[i] = '\0';
+      printf("\n\r");
+      loop = 0;
+      break;
 
-    /* handle backspaces */
-    if (ch == '\b') {
+    case '\b':        // handle backspace
       if (i > 0) {
         i -= 1;
         buf[i] = '\0';
         printf("\b \b");
       }
-      continue;
-    }
+      break;
 
-    /* handle any other character */
-    if (i == len - 1) {
-      buf[i] = '\0';
-    } else if (i < len) {
-      buf[i] = ch;
+    default:          // handle all other characters
+      if (i < len) {
+        buf[i++] = ch;
+      }
+      printf("%c", ch);
     }
-
-    /* print last pressed character and iterate i */
-    printf("%c", ch);
-    i += 1;
   }
 
   return i;
@@ -139,8 +133,7 @@ int main(void)
   HAL_Delay(2500);
 
   printf("Starting shell\n\r");
-  while (1)
-  {
+  while (1) {
     shell();
   }
 }
@@ -183,8 +176,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
     Error_Handler();
   }
 
@@ -201,8 +193,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
-  {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK) {
     Error_Handler();
   }
 }
