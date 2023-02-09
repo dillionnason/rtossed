@@ -75,7 +75,7 @@ int main(void)
   kready = 1;
   while (1) {
     HAL_Delay(100);
-    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    HAL_GPIO_TogglePin(IDLE_LED_GPIO_Port, IDLE_LED_Pin);
   }
 }
 

@@ -99,9 +99,9 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  uwTick++;
-  if (uwTick == 32 && kready == 1) {
-    HAL_GPIO_TogglePin(SysTick_LED_GPIO_Port, SysTick_LED_Pin);
+  uwTick += (uint32_t)uwTickFreq;
+  if (uwTick > 32 && kready == 1) {
+    HAL_GPIO_WritePin(SysTick_LED_GPIO_Port, SysTick_LED_Pin, GPIO_PIN_SET);
   }
 }
 
