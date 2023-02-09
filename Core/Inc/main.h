@@ -97,6 +97,8 @@ void Error_Handler(void);
 #define USB_FS_P_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_1
 #define LD2_GPIO_Port GPIOE
+#define LED_GPIO_Port GPIOD
+#define LED_Pin GPIO_PIN_7
 
 /* USER CODE BEGIN Private defines */
 

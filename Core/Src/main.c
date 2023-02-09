@@ -19,6 +19,8 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_gpio.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -28,7 +30,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
-/* Private function prototypes -----------------------------------------------*/
+int kready = 0;
+
 void SystemClock_Config(void);
 
 /**
@@ -69,7 +72,11 @@ int main(void)
   setvbuf(stdout, NULL, _IONBF, 0);
   HAL_Delay(2500);
 
-  while (1) {}
+  kready = 1;
+  while (1) {
+    HAL_Delay(100);
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+  }
 }
 
 /**
