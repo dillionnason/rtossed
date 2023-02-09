@@ -24,6 +24,7 @@
 #include "gpio.h"
 #include "Adafruit_ST7735.h"
 #include "graphics.h"
+#include "progs.h"
 #include <stdint.h>
 #include <stdio.h>
 
