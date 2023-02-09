@@ -99,6 +99,8 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOE
 #define LED_GPIO_Port GPIOD
 #define LED_Pin GPIO_PIN_7
+#define SysTick_LED_GPIO_Port GPIOD
+#define SysTick_LED_Pin GPIO_PIN_6
 
 /* USER CODE BEGIN Private defines */
 
