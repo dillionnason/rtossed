@@ -18,9 +18,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "process.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_it.h"
+#include <stdio.h>
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
@@ -92,6 +94,7 @@ void DebugMon_Handler(void)
   */
 void PendSV_Handler(void)
 {
+  printf("Testing PendSV_Handler");
 }
 
 /**
@@ -101,7 +104,8 @@ void SysTick_Handler(void)
 {
   uwTick += (uint32_t)uwTickFreq;
   if (uwTick > 32 && kready == 1) {
-    HAL_GPIO_WritePin(SysTick_LED_GPIO_Port, SysTick_LED_Pin, GPIO_PIN_SET);
+    HAL_GPIO_TogglePin(SysTick_LED_GPIO_Port, SysTick_LED_Pin);
+    yield();
   }
 }
 
