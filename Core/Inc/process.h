@@ -5,7 +5,7 @@
 
 extern int kready;
 
-inline void yield(void)
+static inline void yield(void)
 {
 	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 	__DSB();			// Data Synchronization Barrier
