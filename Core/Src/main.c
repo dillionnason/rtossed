@@ -30,6 +30,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+/* User stack */
+extern const uint32_t _eustack[];
+
 int kready = 0;
 
 void SystemClock_Config(void);
@@ -67,6 +70,9 @@ int main(void)
   graphics_setTextColor(0xFFFF);
   graphics_setTextSize(2);
   graphics_drawText("Hello, world!",1,1);
+
+  /* Set user space stack pointer */
+  __set_PSP((uint32_t)_eustack);
 
   /* remove stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
