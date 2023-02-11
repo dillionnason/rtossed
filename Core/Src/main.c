@@ -27,6 +27,7 @@
 #include "Adafruit_ST7735.h"
 #include "graphics.h"
 #include "progs.h"
+#include "process.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -77,6 +78,8 @@ int main(void)
   /* remove stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
   HAL_Delay(2500);
+
+  process_table_init();
 
   kready = 1;
   while (1) {

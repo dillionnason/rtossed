@@ -67,4 +67,9 @@ static inline void yield(void)
 	__ISB();			// Instruction Synchronization Barrier
 }
 
+
+void process_stack_init(struct task_struct *task);
+void process_table_init(void);
+void process_start(void);
+
 #endif // __PROCESS_H
