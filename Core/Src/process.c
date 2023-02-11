@@ -65,3 +65,10 @@ void process_table_init(void)
 	idle_task.exc_return = EXC_RETURN_THREAD_MSP_FPU;
 	idle_task.pid	       = -2;
 }
+
+void process_start(void) 
+{
+	current->cmd();
+	current->state = STATE_STOP;
+	while (1) {}
+}
