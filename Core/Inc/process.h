@@ -11,11 +11,6 @@ extern struct task_struct *current;
 
 /*
  * Core Register Structure
- *			R0-R12					General Purpose Registers
- *			SP							Stack Pointer
- *			LR							Link Register
- *			PC							Program Counter
- *			xPSR						Program Status Register
  */
 struct __attribute__((__packed__)) registers_struct {
 	uint32_t R0;	
@@ -37,7 +32,9 @@ struct __attribute__((__packed__)) registers_struct {
 	uint32_t xPSR;								// Program status register
 };
 
-/* Task states */ 
+/* 
+ * Task states 
+ */ 
 #define PROCESS_UNUSED    0x0000
 #define STATE_TIME_SLEEP  (0b1) << 1
 #define STATE_IO_SLEEP    (0b1) << 2

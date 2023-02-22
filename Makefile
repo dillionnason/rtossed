@@ -82,6 +82,8 @@ Core/Src/Adafruit_ST7735.c \
 Core/Src/glcdfont.c \
 Core/Src/graphics.c \
 Core/Src/syscall.c \
+Core/Src/sh.c \
+Core/Src/sh_getline.c \
 Core/Src/progs.c \
 Core/Src/process.c
 
@@ -192,34 +194,26 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-	@echo "[FILE] $<"
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	@$(AS) -c $(CFLAGS) $< -o $@
-	@echo "[FILE] $<"
+	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-	@echo "[INFO] Linking completed"
-	@echo "[CMD] $(SZ) $@"
-	@$(SZ) $@
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	@$(HEX) $< $@
-	@echo "[CMD] $(HEX) $< $@"
+	$(HEX) $< $@
 	
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	@$(BIN) $< $@	
-	@echo "[CMD] $(BIN) $< $@"
+	$(BIN) $< $@	
 	
 $(BUILD_DIR)/%.asm: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	@$(OD) -d $< > $@
-	@echo "[CMD] $(OD) -d $< > $@"
+	$(OD) -d $< > $@
 
 $(BUILD_DIR):
-	@mkdir $@		
-	@echo "[INFO] Build directory created"
+	mkdir $@		
 
 #######################################
 # clean up
