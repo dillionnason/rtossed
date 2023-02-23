@@ -99,17 +99,14 @@ void __attribute__((naked)) PendSV_Handler(void)
   register struct task_struct *next = schedule();
   register int *sp asm ("sp");
 
-  __asm__ __volatile__ (
-    "pop {%0, %1, %2, %3, %4, %5, %6, %7}\n\t"
-    : "=r" (current->r.R11),
-      "=r" (current->r.R10),
-      "=r" (current->r.R9),
-      "=r" (current->r.R8),
-      "=r" (current->r.R7),
-      "=r" (current->r.R6),
-      "=r" (current->r.R5),
-      "=r" (current->r.R4)
-  );
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R4));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R5));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R6));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R7));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R8));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R9));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R10));
+  __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R11));
 
   if (next == &idle_task) {
     current->r.SP = __get_PSP();
@@ -121,11 +118,6 @@ void __attribute__((naked)) PendSV_Handler(void)
   }
 
   current = next;
-
-  __asm__ __volatile__ (
-    "sub  %0, r11, #0\n\t"
-    : "=r" (sp)
-  );
 
   context_register_restore(next);
   context_switch_return(next);

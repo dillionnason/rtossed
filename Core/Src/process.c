@@ -1,10 +1,8 @@
 #include "process.h"
+#include "sh.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
-/* process functions */
-extern int (*sh)(void);
 
 /* defines */
 #define PROC_MAX 4
