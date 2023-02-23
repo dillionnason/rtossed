@@ -22,6 +22,7 @@
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_it.h"
+#include <stdint.h>
 #include <stdio.h>
 
 /* External variables --------------------------------------------------------*/
@@ -46,9 +47,8 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  while (1) {
-    HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
-  }
+  HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+  while (1) {}
 }
 
 /**
@@ -92,9 +92,43 @@ void DebugMon_Handler(void)
 /**
   * @brief This function handles Pendable request for system service.
   */
-void PendSV_Handler(void)
+void __attribute__((naked)) PendSV_Handler(void)
 {
-  printf("Testing PendSV_Handler");
+  context_register_save();
+
+  register struct task_struct *next = schedule();
+  register int *sp asm ("sp");
+
+  __asm__ __volatile__ (
+    "pop {%0, %1, %2, %3, %4, %5, %6, %7}\n\t"
+    : "=r" (current->r.R11),
+      "=r" (current->r.R10),
+      "=r" (current->r.R9),
+      "=r" (current->r.R8),
+      "=r" (current->r.R7),
+      "=r" (current->r.R6),
+      "=r" (current->r.R5),
+      "=r" (current->r.R4)
+  );
+
+  if (next == &idle_task) {
+    current->r.SP = __get_PSP();
+  } else if (current == &idle_task) {
+    __set_PSP(next->r.SP);
+  } else {
+    current->r.SP = __get_PSP();
+    __set_PSP(next->r.SP);
+  }
+
+  current = next;
+
+  __asm__ __volatile__ (
+    "sub  %0, r11, #0\n\t"
+    : "=r" (sp)
+  );
+
+  context_register_restore(next);
+  context_switch_return(next);
 }
 
 /**
