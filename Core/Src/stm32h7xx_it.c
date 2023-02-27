@@ -97,7 +97,7 @@ void __attribute__((naked)) PendSV_Handler(void)
   context_register_save();
 
   register struct task_struct *next = schedule();
-  register int *sp asm ("sp");
+  //register int *sp asm ("sp");
 
   __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R4));
   __asm__ __volatile__ ("pop {%0}" : "=l" (current->r.R5));

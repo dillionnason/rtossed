@@ -1,8 +1,12 @@
 #include "process.h"
+#include "progs.h"
 #include "sh.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+
+/* User stack */
+extern const uint32_t _eustack[];
 
 /* defines */
 #define PROC_MAX 4
@@ -17,10 +21,12 @@ struct task_struct *current = &idle_task;
  */
 struct task_struct *schedule(void)
 {
-	if (current == &idle_task) {
+	if (current == &idle_task)
 		return &process_table[0];
-	}
-	return &idle_task;
+	else if (current == &process_table[0])
+		return &process_table[1];
+	else
+		return &idle_task;
 }
 
 /*
@@ -28,7 +34,7 @@ struct task_struct *schedule(void)
  *  This function should not return, if the process returns it will go 
  *  into a while loop until the scheduler stops the process. 
  */
-void process_start(void) 
+void process_start(void)
 {
 	current->cmd();
 	current->state = STATE_STOP;
@@ -38,7 +44,7 @@ void process_start(void)
 /*
  *  Intialize the user space stack
  */
-void process_stack_init(struct task_struct *task) 
+void process_stack_init(struct task_struct *task)
 {
 	/* get the stack pointer from the task structure */
 	uint32_t *psp = (uint32_t *)task->r.SP;
@@ -69,20 +75,32 @@ void process_table_init(void)
 	memset(&process_table, 0, sizeof process_table);
 
 	/* set up the shell task structure */
-	process_table[0].r.SP			  = __get_PSP();
-	process_table[0].sp_start   = __get_PSP();
-	process_table[0].r.LR			  = 0;
-	process_table[0].r.PC			  = (uint32_t)&process_start;
-	process_table[0].r.xPSR		  = 0x01000000;  // thumb state
+	process_table[0].r.SP       = (uint32_t)_eustack;
+	process_table[0].sp_start   = (uint32_t)_eustack;
+	process_table[0].r.LR       = 0;
+	process_table[0].r.PC       = (uint32_t)&process_start;
+	process_table[0].r.xPSR     = 0x01000000;  // thumb state
 	process_table[0].state      = STATE_RUN;
-	process_table[0].cmd	      = sh;
+	process_table[0].cmd        = sh;
 	process_table[0].exc_return = EXC_RETURN_THREAD_PSP;
-	process_table[0].pid	      = 0;
+	process_table[0].pid        = 0;
 	process_stack_init(&process_table[0]);
+
+	/* set up process 1 task structure */
+	process_table[1].r.SP       = (uint32_t)(_eustack - 0x800);
+	process_table[1].sp_start   = (uint32_t)(_eustack - 0x800);
+	process_table[1].r.LR       = 0;
+	process_table[1].r.PC       = (uint32_t)&process_start;
+	process_table[1].r.xPSR     = 0x01000000;  // thumb state
+	process_table[1].state      = STATE_RUN;
+	process_table[1].cmd        = process1;
+	process_table[1].exc_return = EXC_RETURN_THREAD_PSP;
+	process_table[1].pid        = 1;
+	process_stack_init(&process_table[1]);
 
 	/* set up the idle task structure */
 	idle_task.state      = STATE_STOP;
 	idle_task.r.xPSR     = 0x01000000;
 	idle_task.exc_return = EXC_RETURN_THREAD_MSP_FPU;
-	idle_task.pid	       = -2;
+	idle_task.pid        = -2;
 }

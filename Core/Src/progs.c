@@ -6,12 +6,13 @@
 /**
 	* Blink the green LED (LD1) at 2Hz
 	*/
-void process1(void)
+int process1(void)
 {
 	while (1) {
 		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
 		HAL_Delay(500);
 	}
+	return 0;
 }
 
 /**
