@@ -85,7 +85,8 @@ Core/Src/syscall.c \
 Core/Src/sh.c \
 Core/Src/sh_getline.c \
 Core/Src/progs.c \
-Core/Src/process.c
+Core/Src/process.c \
+Core/Src/user_syscalls.c
 
 # ASM sources
 ASM_SOURCES =  \
