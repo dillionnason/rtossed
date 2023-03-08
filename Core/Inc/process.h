@@ -52,6 +52,7 @@ struct __attribute__((__packed__)) task_struct {
 	uint32_t sp_start;         // Starting stack pointer address
 	int (*cmd)(void);          // Function pointer
 	struct registers_struct r; // Structure of saved core registers
+	int w_time;                // Wake time
 };
 
 /*
