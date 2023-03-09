@@ -21,12 +21,27 @@ struct task_struct *current = &idle_task;
  */
 struct task_struct *schedule(void)
 {
-	if (current == &idle_task)
-		return &process_table[0];
-	else if (current == &process_table[0])
-		return &process_table[1];
-	else
-		return &idle_task;
+	static size_t iter;
+
+	// Iterate over process table
+	while (1) {
+		struct task_struct *next = &process_table[iter++];
+
+		// Check if next process is runnable
+		if (next->state & STATE_RUN) {
+			return next;
+		} else if (next->state & STATE_TIME_SLEEP) {
+			if (uwTick > next->w_time) {
+				next->state &= ~(STATE_TIME_SLEEP);
+				next->state |= STATE_RUN;
+				return next;
+			}
+		} 
+
+		// Move iterator back to beginning
+		if (iter == PROC_MAX)
+			iter = 0;
+	}
 }
 
 /*
