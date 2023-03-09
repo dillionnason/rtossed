@@ -4,9 +4,9 @@
 #include "stm32h7xx_hal_gpio.h"
 #include "user_syscalls.h"
 
-/**
-	* Blink the green LED (LD1) at 2Hz
-	*/
+/*
+ * Blink the green LED (LD1) at 2Hz
+ */
 int process1(void)
 {
 	while (1) {
@@ -16,9 +16,9 @@ int process1(void)
 	return 0;
 }
 
-/**
-	* Blink the amber LED (LD2) at 1Hz
-	*/
+/*
+ * Blink the amber LED (LD2) at 1Hz
+ */
 void process2(void)
 {
 	while (1) {

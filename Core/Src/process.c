@@ -28,9 +28,9 @@ struct task_struct *schedule(void)
 		struct task_struct *next = &process_table[iter++];
 
 		// Check if next process is runnable
-		if (next->state & STATE_RUN) {
+		if (IS_RUNNING(next)) {
 			return next;
-		} else if (next->state & STATE_TIME_SLEEP) {
+		} else if (IS_SLEEPING(next)) {
 			if (uwTick > next->w_time) {
 				next->state &= ~(STATE_TIME_SLEEP);
 				next->state |= STATE_RUN;

@@ -42,6 +42,9 @@ struct __attribute__((__packed__)) registers_struct {
 #define STATE_STOP        (0b1) << 4
 #define STATE_ZOMBIE      (0b1) << 5
 
+#define IS_RUNNING(x)     (x->state & STATE_RUN) >> 3
+#define IS_SLEEPING(x)    (x->state & STATE_TIME_SLEEP) >> 1
+
 /*
  * Task (process) Structure 
  */

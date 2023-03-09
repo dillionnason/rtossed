@@ -7,7 +7,7 @@
  */
 int microsleep(int useconds) 
 {
-	current->w_time = (uwTick * 1000) + useconds;
+	current->w_time = uwTick + (useconds / 1000);
 	current->state &= ~(STATE_RUN);
 	current->state |= STATE_TIME_SLEEP;
 	yield();
