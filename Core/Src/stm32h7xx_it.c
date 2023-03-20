@@ -21,6 +21,7 @@
 #include "process.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
+#include "stm32h7xx_hal_uart.h"
 #include "stm32h7xx_it.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -30,6 +31,7 @@ extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern SPI_HandleTypeDef hspi1;
 extern int kready;
+extern HAL_UART_StateTypeDef huart3;
 
 /******************************************************************************/
 /*           Cortex Processor Interruption and Exception Handlers          */
@@ -154,6 +156,14 @@ void DMA1_Stream0_IRQHandler(void)
 void SPI1_IRQHandler(void)
 {
 	HAL_SPI_IRQHandler(&hspi1);
+}
+
+/*
+ *  USART3 Interrup handler
+ */
+void USART3_IRQHandler(void)
+{
+	HAL_UART_IRQHandler(&huart3);
 }
 
 /**

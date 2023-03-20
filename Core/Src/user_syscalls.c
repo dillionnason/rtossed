@@ -5,7 +5,7 @@
 /*
  *  Process sleep in microseconds
  */
-int microsleep(int useconds) 
+void microsleep(int useconds) 
 {
 	current->w_time = uwTick + (useconds / 1000);
 	current->state &= ~(STATE_RUN);
