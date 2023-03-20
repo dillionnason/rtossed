@@ -22,12 +22,23 @@ struct task_struct *current = &idle_task;
 struct task_struct *schedule(void)
 {
 	static size_t iter;
+	size_t iterations = 0;
 
-	// Iterate over process table
+	/* Iterate over process table */
 	while (1) {
 		struct task_struct *next = &process_table[iter++];
 
-		// Check if next process is runnable
+		/* if the iterator made its way back around, then no tasks are runnable 
+		 * schedule the idle_task */
+		if (iterations++ == PROC_MAX) {
+			return &idle_task;
+		}
+
+		/* Move iterator back to beginning */
+		if (iter == PROC_MAX)
+			iter = 0;
+ 
+		/* Check if next process is runnable */
 		if (IS_RUNNING(next)) {
 			return next;
 		} else if (IS_SLEEPING(next)) {
@@ -37,10 +48,6 @@ struct task_struct *schedule(void)
 				return next;
 			}
 		} 
-
-		// Move iterator back to beginning
-		if (iter == PROC_MAX)
-			iter = 0;
 	}
 }
 
