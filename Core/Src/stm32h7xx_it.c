@@ -31,7 +31,7 @@ extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern SPI_HandleTypeDef hspi1;
 extern int kready;
-extern HAL_UART_StateTypeDef huart3;
+extern UART_HandleTypeDef huart3;
 
 /******************************************************************************/
 /*           Cortex Processor Interruption and Exception Handlers          */
