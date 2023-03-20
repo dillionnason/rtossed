@@ -1,4 +1,3 @@
-#include "stm32h7xx_hal_uart.h"
 #include "usart.h"
 #include "process.h"
 
@@ -27,6 +26,9 @@ _ssize_t _read_r(struct _reent *ptr, int fd, void *buf, size_t cnt)
 	current->state = STATE_IO_SLEEP;
 	io_wait = current;
 	yield();
+
+	// should never get here, but compiler was mad
+	return 1;
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
