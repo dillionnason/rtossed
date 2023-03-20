@@ -16,9 +16,14 @@ _ssize_t _write_r (struct _reent *ptr, int fd, const void *buf, size_t cnt)
 
 _ssize_t _read_r(struct _reent *ptr, int fd, void *buf, size_t cnt)
 {
-	HAL_StatusTypeDef ret = HAL_BUSY;
-	while (ret != HAL_OK) {
-		ret = HAL_UART_Receive(&huart3, buf, 1, 10000);
+	if (cnt == 0) {
+		return 0;
 	}
-	return 1;
+
+	// Receive a byte from the huart in interrupt mode
+	HAL_UART_Receive_IT(&huart3, buf, 1);
+
+	current->state = STATE_IO_SLEEP;
+	io_wait = current;
+	yield();
 }
