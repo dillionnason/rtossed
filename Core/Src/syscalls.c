@@ -32,6 +32,6 @@ _ssize_t _read_r(struct _reent *ptr, int fd, void *buf, size_t cnt)
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	current->state = STATE_RUN;
+	io_wait->state = STATE_RUN;
 	yield();
 }

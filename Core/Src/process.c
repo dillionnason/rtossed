@@ -28,15 +28,15 @@ struct task_struct *schedule(void)
 	while (1) {
 		struct task_struct *next = &process_table[iter++];
 
+		/* Move iterator back to beginning */
+		if (iter == PROC_MAX)
+			iter = 0;
+
 		/* if the iterator made its way back around, then no tasks are runnable 
 		 * schedule the idle_task */
 		if (iterations++ == PROC_MAX) {
 			return &idle_task;
 		}
-
-		/* Move iterator back to beginning */
-		if (iter == PROC_MAX)
-			iter = 0;
  
 		/* Check if next process is runnable */
 		if (IS_RUNNING(next)) {
