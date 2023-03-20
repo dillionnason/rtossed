@@ -81,7 +81,7 @@ Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/Adafruit_ST7735.c \
 Core/Src/glcdfont.c \
 Core/Src/graphics.c \
-Core/Src/syscall.c \
+Core/Src/syscalls.c \
 Core/Src/sh.c \
 Core/Src/sh_getline.c \
 Core/Src/progs.c \

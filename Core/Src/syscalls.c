@@ -1,4 +1,7 @@
 #include "usart.h"
+#include "process.h"
+
+struct task_struct *io_wait;
 
 int _write(int file, void *ptr, size_t len)
 {
