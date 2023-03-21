@@ -74,7 +74,7 @@ static inline void yield(void)
 static inline void context_register_save(void)
 {
 	__asm__ __volatile__ (
-		"push {r4, r5, r6, r7, r8, r9, r10, r11}\n\t"
+		"push	{r4-r11}\n\t"
 	);
 }
 
@@ -84,18 +84,8 @@ static inline void context_register_save(void)
 static inline void context_register_restore(struct task_struct *next)
 {
 	__asm__ __volatile__ (
-		"ldr   r4,  %0\n\t"
-		"ldr   r5,  %1\n\t"
-		"ldr   r6,  %2\n\t"
-		"ldr   r7,  %3\n\t"
-		"ldr   r8,  %4\n\t"
-		"ldr   r9,  %5\n\t"
-		"ldr   r10, %6\n\t"
-		"ldr   r11, %7\n\t"
-		: : "m" (next->r.R4), "m" (next->r.R5), 
-		"m" (next->r.R6), "m" (next->r.R7),
-		"m" (next->r.R8), "m" (next->r.R9),
-		"m" (next->r.R10),"m" (next->r.R11)
+		"ldm	%0, {r4-r11}\n\t"
+		: : "r" (&next->r.R4)
 	);
 }
 
@@ -105,7 +95,7 @@ static inline void context_register_restore(struct task_struct *next)
 static inline void context_switch_return(struct task_struct *next)
 {
 	__asm__ __volatile__ (
-		"ldr pc, %0\n\t"
+		"ldr	pc, %0\n\t"
 		: : "m" (next->exc_return)
 	);
 }

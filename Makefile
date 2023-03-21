@@ -96,6 +96,8 @@ startup_stm32h7a3xxq.s
 #######################################
 # binaries
 #######################################
+# Toolchain 11.3
+# GCC_PATH = $(HOME)/opt/arm-none-eabi-toolchain/bin
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
@@ -183,6 +185,11 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
+flash: build
+	openocd -f interface/stlink-v2-1.cfg \
+			-f target/stm32h7x.cfg \
+			-c "program build/rtossed.elf verify" \
+			-c "reset run"
 
 #######################################
 # build the application
