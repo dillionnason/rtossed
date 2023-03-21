@@ -21,24 +21,19 @@ struct task_struct *current = &idle_task;
  */
 struct task_struct *schedule(void)
 {
+	/* Index of last process checked */
 	static size_t iter;
-	size_t iterations = 0;
 
 	/* Iterate over process table */
-	while (1) {
-		struct task_struct *next = &process_table[iter++];
-
-		/* Move iterator back to beginning */
+	for (size_t i = 0; i < PROC_MAX; i++, iter++) {
 		if (iter == PROC_MAX)
 			iter = 0;
 
-		/* if the iterator made its way back around, then no tasks are runnable 
-		 * schedule the idle_task */
-		if (iterations++ == PROC_MAX) {
-			return &idle_task;
-		}
+		/* Pointer to next process */
+		struct task_struct *next = &process_table[iter];
  
-		/* Check if next process is runnable */
+		/* Check if next process is runnable,
+		 * if it's sleeping, see if it can be woken up */
 		if (IS_RUNNING(next)) {
 			return next;
 		} else if (IS_SLEEPING(next)) {
@@ -49,6 +44,9 @@ struct task_struct *schedule(void)
 			}
 		} 
 	}
+
+	/* None of the processes are runnable, return idle_task */
+	return &idle_task;
 }
 
 /*

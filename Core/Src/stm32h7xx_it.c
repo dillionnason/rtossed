@@ -92,11 +92,14 @@ void DebugMon_Handler(void) {}
   */
 void __attribute__((naked)) PendSV_Handler(void)
 {
+	/* Push r4-r11 to stack */
 	context_register_save();
 
+	/* Schedule the next task */
 	register struct task_struct *next = schedule();
 	register int *sp asm ("sp");
 
+	/* Save r4-r11 to the current task struct */
 	current->r.R4  = *(sp + 0);
 	current->r.R5  = *(sp + 1);
 	current->r.R6  = *(sp + 2);
@@ -106,6 +109,7 @@ void __attribute__((naked)) PendSV_Handler(void)
 	current->r.R10 = *(sp + 6);
 	current->r.R11 = *(sp + 7);
 
+	/* Set the process stack pointer */
 	if (next == &idle_task) {
 		current->r.SP = __get_PSP();
 	} else if (current == &idle_task) {
@@ -115,12 +119,13 @@ void __attribute__((naked)) PendSV_Handler(void)
 		__set_PSP(next->r.SP);
 	}
 
+	/* Change current task, clean up stack */
 	current = next;
-
 	sp += 8;
 
-	context_register_restore(next);
-	context_switch_return(next);
+	/* Restore r4-r11 from task struct, jump to exc_return */
+	context_register_restore(current);
+	context_switch_return(current);
 }
 
 /**
