@@ -97,7 +97,12 @@ startup_stm32h7a3xxq.s
 # binaries
 #######################################
 # Toolchain 11.3
-# GCC_PATH = $(HOME)/opt/arm-none-eabi-toolchain/bin
+ifeq ($(VER), 11)
+GCC_PATH = $(HOME)/opt/arm-none-eabi-11.3/bin
+endif
+ifeq ($(VER), 12)
+GCC_PATH = $(HOME)/opt/arm-none-eabi-12.2/bin
+endif
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
