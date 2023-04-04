@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
+#include "stm32h7xx_hal_hsem.h"
 #include "user_syscalls.h"
 #include "process.h"
 #include <stdint.h>
@@ -12,9 +13,12 @@
  */
 int process1(void)
 {
-	static uint8_t count = 0;
+	//static uint8_t i = 0;
+	uint8_t i = 0;
 	while (1) {
-		printf("Current: %d | The current value of i is: %u\r\n", current->pid, count++);
+		//while (HAL_HSEM_Take(0, current->pid) == HAL_ERROR) {}
+		printf("Current: %d | The current value of i is: %u\r\n", current->pid, i++);
+		//HAL_HSEM_Release(0, current->pid);
 		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
 		microsleep(500000);
 	}
@@ -26,9 +30,7 @@ int process1(void)
  */
 void process2(void)
 {
-	static uint8_t count = 0;
 	while (1) {
-		printf("Current: %d | The current value of i is: %u\r\n", current->pid, count++);
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 		microsleep(1000000);
 	}
