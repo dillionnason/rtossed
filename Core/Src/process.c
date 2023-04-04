@@ -94,6 +94,7 @@ void process_table_init(void)
 	/* clear the process table */
 	memset(&process_table, 0, sizeof process_table);
 
+#ifdef PROJECT1
 	/* set up the shell task structure */
 	process_table[0].r.SP       = (uint32_t)_eustack;
 	process_table[0].sp_start   = (uint32_t)_eustack;
@@ -105,6 +106,21 @@ void process_table_init(void)
 	process_table[0].exc_return = EXC_RETURN_THREAD_PSP;
 	process_table[0].pid        = 0;
 	process_stack_init(&process_table[0]);
+#endif
+
+#ifndef PROJECT1
+	/* set up process 1 task structure */
+	process_table[0].r.SP       = (uint32_t)(_eustack - 0x800);
+	process_table[0].sp_start   = (uint32_t)(_eustack - 0x800);
+	process_table[0].r.LR       = 0;
+	process_table[0].r.PC       = (uint32_t)&process_start;
+	process_table[0].r.xPSR     = 0x01000000;  // thumb state
+	process_table[0].state      = STATE_RUN;
+	process_table[0].cmd        = process1;
+	process_table[0].exc_return = EXC_RETURN_THREAD_PSP;
+	process_table[0].pid        = 1;
+	process_stack_init(&process_table[0]);
+#endif
 
 	/* set up process 1 task structure */
 	process_table[1].r.SP       = (uint32_t)(_eustack - 0x800);
