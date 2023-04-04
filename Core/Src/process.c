@@ -110,8 +110,8 @@ void process_table_init(void)
 
 #ifndef PROJECT1
 	/* set up process 1 task structure */
-	process_table[0].r.SP       = (uint32_t)(_eustack - 0x800);
-	process_table[0].sp_start   = (uint32_t)(_eustack - 0x800);
+	process_table[0].r.SP       = (uint32_t)(_eustack);
+	process_table[0].sp_start   = (uint32_t)(_eustack);
 	process_table[0].r.LR       = 0;
 	process_table[0].r.PC       = (uint32_t)&process_start;
 	process_table[0].r.xPSR     = 0x01000000;  // thumb state
