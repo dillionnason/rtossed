@@ -59,7 +59,7 @@ int main(void)
 	MX_SPI1_Init();
 	MX_USART3_UART_Init();
 	MX_USB_DEVICE_Init();
-	//__HAL_RCC_HSEM_CLK_ENABLE(); // enable hardware semaphore clock
+	__HAL_RCC_HSEM_CLK_ENABLE(); // enable hardware semaphore clock
 	
 	/* Graphics init */
 	HAL_GPIO_WritePin(BACK_LITE_GPIO_Port,BACK_LITE_Pin,1);
