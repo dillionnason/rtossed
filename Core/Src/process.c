@@ -25,8 +25,8 @@ struct task_struct *schedule(void)
 	static size_t iter;
 
 	/* Iterate over process table */
-	for (size_t i = 0; i < PROC_MAX; i++, iter++) {
-		if (iter == PROC_MAX)
+	for (size_t i = 0; i < PROC_MAX; i++) {
+		if (++iter == PROC_MAX)
 			iter = 0;
 
 		/* Pointer to next process */
