@@ -16,11 +16,15 @@ int process1(void)
 	//static uint8_t i = 0;
 	uint8_t i = 0;
 	while (1) {
-		//while (HAL_HSEM_Take(0, current->pid) == HAL_ERROR) {}
+		while (HAL_HSEM_Take(0, current->pid) != HAL_OK)
+			yield();
+
 		printf("Current: %d | The current value of i is: %u\r\n", current->pid, i++);
-		//HAL_HSEM_Release(0, current->pid);
+
+		HAL_HSEM_Release(0, current->pid);
+
 		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-		//microsleep(500000);
+		microsleep(1000); // 1 ms delay
 	}
 	return 0;
 }
