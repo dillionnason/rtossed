@@ -20,7 +20,7 @@ int process1(void)
 		printf("Current: %d | The current value of i is: %u\r\n", current->pid, i++);
 		//HAL_HSEM_Release(0, current->pid);
 		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-		microsleep(500000);
+		//microsleep(500000);
 	}
 	return 0;
 }
